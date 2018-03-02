@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
+<title>The Mana World</title>
+<meta name="description" content="(placeholder)">
+<meta name="theme-color" content="#0488e6">
+
+<style>
+body {
+    display: grid;
+    grid-template-areas:
+        "header header"
+        "content side"
+        "content nav"
+        "footer footer";
+    grid-gap: 2em;
+    grid-template-columns: 1fr 200px;
+    grid-template-rows: auto 120px 1fr auto;
+
+    margin: 0 auto;
+    max-width: 56em;
+    padding: 1em 0;
+    background: #eee;
+    min-height: 400px;
+}
+
+body > header {
+    grid-area: header;
+    color: green;
+    font-size: 4em;
+    font-weight: bolder;
+}
+
+body > footer {
+    grid-area: footer;
+    color: rgba(0,0,0, 0.4);
+}
+
+body > aside {
+    grid-area: side;
+}
+
+body > aside > a {
+    border-radius: 14px;
+    display: block;
+    padding: 1em;
+    background: lime;
+    text-decoration: none;
+    color: grey;
+    text-align: center;
+    font-weight: bold;
+}
+
+body > aside > a:last-child {
+    margin-top: 1em;
+}
+
+body > aside > a:hover {
+    background: purple;
+    color: #fff;
+}
+
+body > nav {
+    grid-area: nav;
+}
+
+body > nav > a {
+    display: block;
+    padding: 10px;
+    background: lightgrey;
+    text-decoration: none;
+    color: blue;
+}
+
+body > nav > a:nth-child(1n+1) {
+    margin-top: 10px;
+}
+
+body > main {
+    grid-area: content;
+}
+
+main > article {
+    background: #ffdea3;
+}
+
+main > article:nth-child(1n+2) {
+    margin-top: 2em;
+}
+
+article > header {
+    font-size: 1.3em;
+    border-top: 2px orange solid;
+    background: #ffcb6b;
+    padding-left: 1em;
+}
+
+article > p {
+    padding: 1em;
+}
+
+article > footer {
+    padding: 1em;
+}
+
+@media (max-width: 768px) {
+    body {
+        grid-template-areas:
+            "header"
+            "side"
+            "content"
+            "nav"
+            "footer";
+
+        grid-template-columns: 1fr;
+        grid-template-rows:
+            auto /* header */
+            minmax(75px, auto) /* side */
+            1fr /* content */
+            minmax(75px, auto) /* nav */
+            auto; /* footer */
+    }
+}
+
+@media (max-width: 500px) {
+    body > header {
+        font-size: 3em;
+    }
+}
+</style>
+</head>
+<body>
+    <header>
+        The Mana World
+    </header>
+    <main>
+        <article>
+            <header>pork</header>
+            <p>Prosciutto beef ribs turducken sirloin. Rump tail boudin, andouille turkey tenderloin ball tip drumstick buffalo ham hock bacon pork belly ham spare ribs fatback. Pork loin spare ribs tenderloin picanha venison turkey. Jowl salami tri-tip bresaola leberkas, shankle filet mignon jerky biltong short loin kevin cupim cow. Kielbasa turducken venison, pancetta prosciutto ribeye bresaola doner swine short ribs corned beef. Turducken turkey pork loin fatback short loin.</p>
+            <footer>- TMW Team</footer>
+        </article>
+        <article>
+            <header>beef</header>
+            <p>Fatback beef ribs meatball pig, landjaeger pancetta bresaola. Pork corned beef t-bone, swine bacon brisket beef ribs. Flank chicken spare ribs andouille, ham hock boudin ribeye turducken pork picanha cow frankfurter tongue porchetta bresaola. Porchetta ground round beef ribs meatball, turducken buffalo t-bone beef pork belly fatback doner pancetta pork loin shankle. Pig capicola short ribs tongue strip steak cow porchetta drumstick meatball pancetta.</p>
+            <footer>- TMW Team</footer>
+        </article>
+        <article>
+            <header>turkey</header>
+            <p>Andouille capicola meatloaf, swine pork pork chop t-bone fatback venison pastrami. Filet mignon frankfurter pork chop rump cupim brisket, andouille shank bacon jowl ball tip. Pancetta prosciutto meatball, landjaeger pork porchetta andouille chicken kielbasa salami t-bone. Capicola meatball fatback porchetta venison. Short loin bacon filet mignon spare ribs sausage alcatra pork chop beef ribs pork loin tenderloin. Short loin swine short ribs spare ribs ham hock picanha.</p>
+            <footer>- TMW Team</footer>
+        </article>
+    </main>
+    <aside>
+        <a href="https://manaplus.org?utm_source=TMW-WEBSITE" target="_blank" rel="noopener noreferrer">Download</a>
+        <a href="register/">Create Account</a>
+    </aside>
+    <nav>
+        <a class="active" href="">Home</a>
+        <a href="about/">About</a>
+        <a href="gallery/">Gallery</a>
+        <a href="https://forums.themanaworld.org?utm_source=TMW-WEBSITE" target="_blank" rel="noopener noreferrer">Forums</a>
+        <a href="https://wiki.themanaworld.org?utm_source=TMW-WEBSITE" target="_blank" rel="noopener noreferrer">Wiki</a>
+        <a href="support/">Support</a>
+    </nav>
+    <footer>
+        Copyright &copy; 2018 The Mana World.
+    </footer>
+</body>
+</html>
