@@ -189,7 +189,7 @@
                     <input name="username" placeholder="Username" type="text" tabindex="1" minlength="4" maxlength="23" pattern="^[a-zA-Z0-9]{4,23}$" title="4-23 characters, alphanumeric" required autofocus>
                 </fieldset>
                 <fieldset>
-                    <input name="password" placeholder="Password" type="password" tabindex="2" minlength="4" maxlength="23" pattern="^[a-zA-Z0-9]{4,23}$" title="4-23 characters, alphanumeric" required>
+                    <input name="password" placeholder="Password" type="password" tabindex="2" minlength="6" maxlength="23" pattern="^[a-zA-Z0-9]{6,23}$" title="6-23 characters, alphanumeric" required>
                 </fieldset>
                 <fieldset>
                     <input name="email" placeholder="Email Address (optional)" type="email" maxlength="39" tabindex="3">
@@ -240,6 +240,12 @@
                     validateInput(nodes.pwd) &&
                     validateInput(nodes.email);
                     grecaptcha.reset();
+                    return;
+                }
+
+                if (nodes.pwd.value.length < 12 && !window.confirm("Your password is quite short. For better security you should consider using a password at least 12 characters long.\n\nDo you really want to use a weak password?")) {
+                    grecaptcha.reset();
+                    nodes.pwd.focus();
                     return;
                 }
 
