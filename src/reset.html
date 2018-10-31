@@ -124,6 +124,11 @@
               border: 1px solid #aaa;
             }
 
+            .grecaptcha-badge {
+                margin-bottom: 2em;
+                margin-top: 2em;
+            }
+
             .container > form.error .status {
                 display: block!important;
             }
@@ -132,10 +137,6 @@
                 border-color: #900!important;
                 background-color: #FDD!important;
             }
-
-            /*input:focus:required:valid {
-                background-color: greenyellow!important;
-            }*/
 
             .warning {
                 color: #fff;
@@ -180,49 +181,46 @@
         </noscript>
 
         <div class="container">
-            <form id="register" action="#" method="POST">
+            <form id="pwreset" action="#" method="POST">
                 <h3>The Mana World</h3>
-                <h4>Account creation</h4>
+                <h4>Password reset</h4>
                 <span class="status">...</span>
                 <fieldset>
                     <input name="username" placeholder="Username" type="text" tabindex="1" minlength="4" maxlength="23" pattern="^[a-zA-Z0-9]{4,23}$" title="4-23 characters, alphanumeric" required autofocus>
                 </fieldset>
                 <fieldset>
-                    <input name="password" placeholder="Password" type="password" tabindex="2" minlength="6" maxlength="23" pattern="^[a-zA-Z0-9]{6,23}$" title="6-23 characters, alphanumeric" required>
-                </fieldset>
-                <fieldset>
                     <input name="email" placeholder="Email Address (optional)" type="email" maxlength="39" tabindex="3">
                 </fieldset>
                 <fieldset>
-                    <div class="g-recaptcha"
-                        data-sitekey="6LdaVUcUAAAAAJ-7cORTu4cZCPSNjDqjz3y4nLVR"
-                        data-callback="onCaptchaCompletion"
-                        data-size="invisible">
-                    </div>
                     <div>
-                        <button type="submit">Submit</button>
+                        <button
+                        class="g-recaptcha"
+                        data-sitekey="6LdaVUcUAAAAAJ-7cORTu4cZCPSNjDqjz3y4nLVR"
+                        data-callback="onSubmit"
+                        data-badge="inline"
+                        data-submit="...Sending"
+                        type="submit">Submit</button>
                     </div>
                 </fieldset>
             </form>
         </div>
         <script>
-            var recaptcha_loaded = false;
-
             const nodes = {
                 uname: document.querySelector("input[name=username]"),
                 pwd: document.querySelector("input[name=password]"),
                 email: document.querySelector("input[name=email]"),
+                code: document.querySelector("input[name=code]"),
                 form: document.querySelector(".container > form"),
                 status: document.querySelector(".status"),
-                button: document.querySelector(".container > form button"),
+                captcha: undefined
             };
 
             const validateInput = node => {
                 node.setCustomValidity("");
-                if (node.checkValidity() === false && node.value != "") {
+                if (node.checkValidity() === false) {
                     node.classList.add("invalid");
-                    //node.setCustomValidity(node.title);
-                    //node.focus();
+                    node.setCustomValidity(node.title);
+                    node.focus();
                     return false;
                 } else {
                     node.classList.remove("invalid");
@@ -234,39 +232,28 @@
                 validateInput(event.target);
             });
 
-            nodes.form.addEventListener("submit", e => {
-                e.preventDefault();
-                e.stopPropagation();
-
-                /*if (nodes.form.checkValidity() === false) {
+            function onSubmit(token) {
+                if (nodes.form.checkValidity() === false) {
                     validateInput(nodes.uname) &&
                     validateInput(nodes.pwd) &&
                     validateInput(nodes.email);
+                    grecaptcha.reset();
                     return;
-                }*/ // <= this is already being enforced by the browser
+                }
 
                 if (nodes.pwd.value.length < 12 && !window.confirm("Your password is quite short. For better security you should consider using a password at least 12 characters long.\n\nDo you really want to use a weak password?")) {
+                    grecaptcha.reset();
                     nodes.pwd.focus();
                     return;
                 }
 
                 if (nodes.email.value.length < 3 && !window.confirm("Warning: if you do not supply an email address you will be completely unable to reset your password if you loose it.\n\nDo you really want to continue without an email address?")) {
+                    grecaptcha.reset();
                     nodes.email.focus();
                     return;
                 }
 
-                if (!recaptcha_loaded || !Reflect.has(window, "grecaptcha")) {
-                    nodes.form.classList.add("error");
-                    nodes.status.innerText = "reCAPTCHA couldn't be loaded. Make sure to whitelist this page in noscript, ghostery or any other ad/tracker blocker.";
-                    nodes.status.style.display = "block"; // <= MS Edge bug
-                    return;
-                }
-
-                grecaptcha.execute();
-            });
-
-            function onCaptchaCompletion(token) {
-                const req = new Request("/api/tmwa/account", {
+                const req = new Request("/api/account", {
                     method: "POST",
                     mode: "same-origin",
                     cache: "no-cache",
@@ -317,10 +304,10 @@
                 });
             }
 
-            function ReInit() {
-                recaptcha_loaded = true;
+            function Init() {
+                nodes.captcha = document.querySelector(".grecaptcha-badge");
             }
         </script>
-        <script src="https://www.google.com/recaptcha/api.js?onload=ReInit" async defer></script>
+        <script src="https://www.google.com/recaptcha/api.js?onload=Init" async defer></script>
     </body>
 </html>
