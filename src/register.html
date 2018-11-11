@@ -234,6 +234,49 @@
                 validateInput(event.target);
             });
 
+            nodes.pwd.addEventListener("change", e => {
+                if (e.isTrusted && nodes.form.querySelector("input") && Reflect.has(window, "Rusha") && nodes.pwd.checkValidity()) {
+                    const full_hash = Rusha.createHash().update(nodes.pwd.value).digest("hex");
+                    const hash_prefix = full_hash.substring(0, 5);
+                    const hash_suffix = full_hash.substring(5);
+
+                    const req = new Request(`https://api.pwnedpasswords.com/range/${hash_prefix}`, {
+                        method: "GET",
+                        mode: "cors",
+                        cache: "force-cache",
+                        referrer: "no-referrer",
+                    });
+
+                    fetch(req)
+                    .then(response => response.text())
+                    .then(response => {
+                        const found = response.split("\n").some(h => {
+                            const [hs, times] = h.split(":");
+
+                            if (hash_suffix.toUpperCase() === hs.toUpperCase()) {
+                                return true;
+                            }
+
+                            return false;
+                        });
+
+                        if (found === true) {
+                            nodes.form.classList.add("error");
+                            nodes.status.innerText = "WARNING: This password has previously appeared in a data breach. Please use a more secure alternative.\n>> checked by haveibeenpwned.com\n\n";
+                            nodes.status.style.display = "block"; // <= MS Edge bug
+                            nodes.pwd.focus();
+                            nodes.pwd.classList.add("invalid");
+                        } else {
+                            nodes.form.classList.remove("error");
+                            nodes.status.style.display = "none";
+                        }
+                    })
+                    .catch(error => {
+                        // we don't really have any reason to catch that one
+                    });
+                }
+            });
+
             nodes.form.addEventListener("submit", e => {
                 e.preventDefault();
                 e.stopPropagation();
@@ -322,5 +365,6 @@
             }
         </script>
         <script src="https://www.google.com/recaptcha/api.js?onload=ReInit" async defer></script>
+        <script src="/rusha.min.js"></script>
     </body>
 </html>
